@@ -720,9 +720,23 @@
   video.addEventListener('play', syncCenterToggle);
   video.addEventListener('pause', syncCenterToggle);
   video.addEventListener('playing', syncCenterToggle);
+  function jumpToLiveEdge(){
+    try{
+      if(hls && typeof hls.liveSyncPosition === 'number' && isFinite(hls.liveSyncPosition)){
+        video.currentTime = hls.liveSyncPosition;
+      } else if(video.seekable && video.seekable.length){
+        video.currentTime = video.seekable.end(video.seekable.length - 1);
+      }
+    }catch(e){ /* ignore — not a live stream or not seekable yet */ }
+  }
+
   centerToggle.addEventListener('click', () => {
-    if(video.paused){ video.play().catch(()=>{}); }
-    else{ video.pause(); }
+    if(video.paused){
+      jumpToLiveEdge();
+      video.play().catch(()=>{});
+    } else{
+      video.pause();
+    }
   });
 
   const stopBtn = document.getElementById('stopBtn');
