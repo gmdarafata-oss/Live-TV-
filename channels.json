@@ -1,0 +1,16 @@
+[
+  {
+    "id": "ch01",
+    "number": "01",
+    "name": "Sample Channel One",
+    "logo": "https://placehold.co/120x120/1a1f2b/8a93a6?text=CH+01",
+    "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+  },
+  {
+    "id": "ch02",
+    "number": "02",
+    "name": "Sample Channel Two",
+    "logo": "https://placehold.co/120x120/1a1f2b/8a93a6?text=CH+02",
+    "url": "https://test-streams.mux.dev/test_001/stream.m3u8"
+  }
+]

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Channel Deck — Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js"></script>
+<style>
+  :root{
+    --bg: #0B0E14;
+    --surface: #131822;
+    --surface-raised: #1B2230;
+    --border: #262E3D;
+    --text: #E8EAED;
+    --text-muted: #8A93A6;
+    --amber: #FFB020;
+    --cyan: #4DD8E8;
+    --red: #FF4D4D;
+    --display: 'Oswald', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html,body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    min-height: 100vh;
+  }
+
+  body{
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(77,216,232,0.06), transparent 40%),
+      radial-gradient(circle at 85% 100%, rgba(255,176,32,0.05), transparent 45%);
+  }
+
+  a{ color: inherit; }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 22px clamp(20px, 5vw, 56px);
+    border-bottom: 1px solid var(--border);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family: var(--display);
+    font-weight:600;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+  }
+  .brand .dot{
+    width:9px; height:9px; border-radius:50%;
+    background: var(--red);
+    box-shadow: 0 0 8px 1px rgba(255,77,77,0.7);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  .clock{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  @keyframes pulse{
+    0%,100%{ opacity:1; }
+    50%{ opacity:.35; }
+  }
+
+  /* ---------- monitor / hero ---------- */
+  .stage{
+    padding: clamp(24px, 4vw, 48px) clamp(20px, 5vw, 56px) 0;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .monitor{
+    position: relative;
+    background: #000;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.02) inset;
+  }
+
+  .monitor video{
+    width:100%; height:100%; object-fit: contain; background:#000;
+    display:block;
+  }
+
+  .scanline-overlay{
+    position:absolute; inset:0;
+    pointer-events:none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.025) 0px,
+      rgba(255,255,255,0.025) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode: overlay;
+    opacity: .5;
+  }
+
+  .placeholder{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:14px;
+    color: var(--text-muted);
+    text-align:center;
+    padding: 24px;
+  }
+  .placeholder .glyph{
+    width:54px; height:54px;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .placeholder .glyph svg{ width:22px; height:22px; opacity:.6; }
+  .placeholder p{ font-size: 13px; max-width: 280px; line-height:1.5; }
+
+  .lower-third{
+    position:absolute;
+    left: 18px; bottom: 18px;
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    padding: 10px 16px 10px 10px;
+    background: rgba(11,14,20,0.72);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .35s ease, transform .35s ease;
+  }
+  .lower-third.show{ opacity:1; transform: translateY(0); }
+
+  .lower-third .num{
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--cyan);
+    border-right: 1px solid rgba(255,255,255,0.12);
+    padding-right: 12px;
+  }
+  .lower-third .meta{ display:flex; flex-direction:column; gap:2px; }
+  .lower-third .name{ font-family: var(--display); font-size: 14px; letter-spacing:.4px; }
+  .lower-third .tag{
+    display:flex; align-items:center; gap:6px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
+    color: var(--red); text-transform:uppercase;
+  }
+  .lower-third .tag::before{
+    content:''; width:6px; height:6px; border-radius:50%;
+    background: var(--red);
+    box-shadow: 0 0 6px 1px rgba(255,77,77,0.8);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  .stage-controls{
+    display:flex; align-items:center; justify-content:space-between;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .stage-controls .status{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: .5px;
+  }
+  .stage-controls .status b{ color: var(--text); font-weight:500; }
+
+  .reload-btn{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .5px;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 7px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color .2s, color .2s;
+  }
+  .reload-btn:hover{ border-color: var(--cyan); color: var(--cyan); }
+
+  /* ---------- channel deck ---------- */
+  .deck{
+    max-width: 1180px;
+    margin: 36px auto 0;
+    padding: 0 clamp(20px, 5vw, 56px) 64px;
+  }
+
+  .deck-head{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+  }
+  .deck-head h2{
+    font-family: var(--display);
+    font-weight:500;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .deck-head span{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .channel-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 10px;
+  }
+
+  .channel-card{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    cursor:pointer;
+    text-align:left;
+    transition: border-color .18s ease, background .18s ease, transform .18s ease;
+  }
+  .channel-card:hover{
+    border-color: rgba(77,216,232,0.4);
+    transform: translateY(-1px);
+  }
+  .channel-card.active{
+    background: var(--surface-raised);
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 1px rgba(77,216,232,0.15), 0 8px 24px -12px rgba(77,216,232,0.25);
+  }
+
+  .channel-card .logo{
+    width: 40px; height:40px;
+    border-radius: 7px;
+    background: var(--surface-raised);
+    object-fit: cover;
+    flex-shrink:0;
+    border: 1px solid var(--border);
+  }
+
+  .channel-card .info{ min-width:0; }
+  .channel-card .num{
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+  .channel-card.active .num{ color: var(--cyan); }
+  .channel-card .name{
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow: ellipsis;
+  }
+
+  .empty-state{
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 32px 20px;
+    text-align:center;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .empty-state code{
+    font-family: var(--mono);
+    background: var(--surface);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--amber);
+  }
+
+  /* ---------- footer / how-to ---------- */
+  .howto{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 5vw, 56px) 70px;
+  }
+  .howto-card{
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    padding: 22px clamp(18px, 3vw, 28px);
+  }
+  .howto-card h3{
+    font-family: var(--display);
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 12px;
+  }
+  .howto-card ol{
+    list-style: none;
+    counter-reset: step;
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+  }
+  .howto-card li{
+    counter-increment: step;
+    display:flex;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .howto-card li::before{
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--cyan);
+    flex-shrink:0;
+    padding-top: 1px;
+  }
+  .howto-card code{
+    font-family: var(--mono);
+    background: var(--surface-raised);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  @media (max-width: 540px){
+    .lower-third{ left:10px; bottom:10px; padding:8px 12px 8px 8px; }
+    .lower-third .num{ font-size:16px; }
+    .channel-grid{ grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); }
+  }
+
+  :focus-visible{
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .brand .dot, .lower-third .tag::before{ animation: none; }
+    .channel-card{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand"><span class="dot"></span> CHANNEL DECK</div>
+    <div class="clock" id="clock">--:--:--</div>
+  </header>
+
+  <main class="stage">
+    <div class="monitor" id="monitor">
+      <video id="video" playsinline muted></video>
+      <div class="scanline-overlay"></div>
+      <div class="placeholder" id="placeholder">
+        <div class="glyph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+        <p>একটি চ্যানেল বেছে নিন প্লে শুরু করতে</p>
+      </div>
+      <div class="lower-third" id="lowerThird">
+        <div class="num" id="ltNum">--</div>
+        <div class="meta">
+          <div class="name" id="ltName">—</div>
+          <div class="tag">ON AIR</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage-controls">
+      <div class="status" id="status">স্ট্যাটাস: <b>স্ট্যান্ডবাই</b></div>
+      <button class="reload-btn" id="reloadBtn">⟳ চ্যানেল লিস্ট রিলোড করুন</button>
+    </div>
+  </main>
+
+  <section class="deck">
+    <div class="deck-head">
+      <h2>চ্যানেল লিস্ট</h2>
+      <span id="countLabel">0 চ্যানেল</span>
+    </div>
+    <div class="channel-grid" id="channelGrid"></div>
+  </section>
+
+  <section class="howto">
+    <div class="howto-card">
+      <h3>নতুন চ্যানেল যোগ করবেন যেভাবে</h3>
+      <ol>
+        <li>রিপোতে থাকা <code>channels.json</code> ফাইলটি ওপেন করুন।</li>
+        <li>একটি নতুন entry যোগ করুন — <code>id</code>, <code>number</code>, <code>name</code>, <code>logo</code> (ঐচ্ছিক) এবং <code>url</code> (m3u8 লিংক) দিন।</li>
+        <li>Commit করে GitHub এ পুশ করুন — GitHub Pages কয়েক সেকেন্ডের মধ্যে আপডেট হয়ে যাবে।</li>
+        <li>পেজ রিফ্রেশ করলেই নতুন চ্যানেলটি লিস্টে দেখা যাবে।</li>
+      </ol>
+    </div>
+  </section>
+
+<script>
+  const video = document.getElementById('video');
+  const monitor = document.getElementById('monitor');
+  const placeholder = document.getElementById('placeholder');
+  const lowerThird = document.getElementById('lowerThird');
+  const ltNum = document.getElementById('ltNum');
+  const ltName = document.getElementById('ltName');
+  const grid = document.getElementById('channelGrid');
+  const countLabel = document.getElementById('countLabel');
+  const statusEl = document.getElementById('status');
+  const reloadBtn = document.getElementById('reloadBtn');
+  const clockEl = document.getElementById('clock');
+
+  let hls = null;
+  let activeId = null;
+
+  function tickClock(){
+    const d = new Date();
+    clockEl.textContent = d.toLocaleTimeString('en-GB', { hour12:false });
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  function setStatus(text){
+    statusEl.innerHTML = 'স্ট্যাটাস: <b>' + text + '</b>';
+  }
+
+  function playChannel(ch, cardEl){
+    document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
+    if(cardEl) cardEl.classList.add('active');
+    activeId = ch.id;
+
+    placeholder.style.display = 'none';
+    ltNum.textContent = ch.number || '--';
+    ltName.textContent = ch.name || 'Unknown';
+    lowerThird.classList.add('show');
+    setStatus('লোড হচ্ছে…');
+
+    if(hls){ hls.destroy(); hls = null; }
+
+    if(window.Hls && Hls.isSupported()){
+      hls = new Hls();
+      hls.loadSource(ch.url);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play().catch(()=>{});
+        setStatus('লাইভ — ' + ch.name);
+      });
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        if(data.fatal){
+          setStatus('এরর — স্ট্রিম লোড করা যায়নি');
+        }
+      });
+    } else if(video.canPlayType('application/vnd.apple.mpegurl')){
+      video.src = ch.url;
+      video.addEventListener('loadedmetadata', () => {
+        video.play().catch(()=>{});
+        setStatus('লাইভ — ' + ch.name);
+      }, { once:true });
+    } else {
+      setStatus('এই ব্রাউজারে HLS সাপোর্ট নেই');
+    }
+  }
+
+  function renderChannels(list){
+    grid.innerHTML = '';
+    countLabel.textContent = list.length + (list.length === 1 ? ' চ্যানেল' : ' চ্যানেল');
+
+    if(!list.length){
+      const empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.style.gridColumn = '1/-1';
+      empty.innerHTML = 'এখনও কোনো চ্যানেল যোগ করা হয়নি। <br><code>channels.json</code> ফাইলে চ্যানেল যোগ করুন।';
+      grid.appendChild(empty);
+      return;
+    }
+
+    list.forEach((ch, i) => {
+      const card = document.createElement('button');
+      card.className = 'channel-card';
+      card.type = 'button';
+      card.innerHTML = `
+        <img class="logo" src="${ch.logo || 'https://placehold.co/80x80/1a1f2b/8a93a6?text=' + (ch.number||'')}" alt="" onerror="this.style.visibility='hidden'">
+        <div class="info">
+          <div class="num">CH ${ch.number || (i+1).toString().padStart(2,'0')}</div>
+          <div class="name">${ch.name}</div>
+        </div>
+      `;
+      card.addEventListener('click', () => playChannel(ch, card));
+      grid.appendChild(card);
+
+      if(i === 0 && !activeId){
+        // auto-select first channel on first load (without forcing playback)
+      }
+    });
+  }
+
+  async function loadChannels(){
+    setStatus('চ্যানেল লিস্ট লোড হচ্ছে…');
+    try{
+      const res = await fetch('channels.json?_=' + Date.now());
+      const data = await res.json();
+      renderChannels(data);
+      setStatus('স্ট্যান্ডবাই');
+    }catch(err){
+      console.error(err);
+      renderChannels([]);
+      setStatus('channels.json লোড করতে সমস্যা হয়েছে');
+    }
+  }
+
+  reloadBtn.addEventListener('click', loadChannels);
+  loadChannels();
+</script>
+
+</body>
+</html>
