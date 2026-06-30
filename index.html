@@ -263,31 +263,43 @@
   .fullscreen-btn:active{ transform: scale(0.94); }
   .fullscreen-btn svg{ width:18px; height:18px; }
 
-  .monitor:fullscreen{
+  body.is-fullscreen{
+    overflow: hidden;
+    background: #000;
+  }
+  body.is-fullscreen .topbar,
+  body.is-fullscreen .stage-controls,
+  body.is-fullscreen .deck,
+  body.is-fullscreen .howto{
+    display: none;
+  }
+  body.is-fullscreen .stage{ padding: 0; max-width: none; }
+  body.is-fullscreen .monitor{
+    position: fixed;
+    inset: 0;
     width: 100vw;
     height: 100vh;
     aspect-ratio: unset;
     border-radius: 0;
+    z-index: 999;
     display:flex;
     align-items:center;
     justify-content:center;
   }
-  .monitor:fullscreen video{
+  body.is-fullscreen .monitor video{
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
 
   /* Force landscape display when fullscreen is opened on a portrait phone
-     (used as a fallback where screen.orientation.lock isn't supported, e.g. iOS Safari) */
+     (fallback for browsers where screen.orientation.lock isn't available/permitted, e.g. iOS) */
   @media (orientation: portrait){
-    .monitor:fullscreen{
-      position: fixed;
-      top: 0; left: 0;
-      transform-origin: top left;
-      transform: rotate(90deg) translateY(-100%);
+    body.is-fullscreen .monitor{
       width: 100vh;
       height: 100vw;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(90deg);
     }
   }
 
@@ -305,10 +317,34 @@
     cursor:pointer;
     transition: border-color .2s, color .2s, transform .15s;
   }
-  .monitor:fullscreen .channels-btn{ display:flex; }
+  body.is-fullscreen .channels-btn{ display:flex; }
   .channels-btn:hover{ border-color: var(--cyan); color: var(--cyan); }
   .channels-btn.active{ border-color: var(--cyan); color: var(--cyan); }
   .channels-btn svg{ width:18px; height:18px; }
+
+  .center-toggle{
+    position:absolute;
+    top:50%; left:50%;
+    transform: translate(-50%, -50%);
+    width: 64px; height:64px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+    z-index: 4;
+  }
+  .center-toggle.show{ opacity:1; pointer-events:auto; }
+  .center-toggle svg{ width:22px; height:22px; }
+  .center-toggle .icon-pause{ display:none; }
+  .center-toggle.is-playing .icon-play{ display:none; }
+  .center-toggle.is-playing .icon-pause{ display:block; }
+
+
 
   .stop-btn{
     position:absolute;
@@ -564,6 +600,10 @@
     <div class="monitor" id="monitor">
       <video id="video" playsinline muted></video>
       <div class="scanline-overlay"></div>
+      <button class="center-toggle" id="centerToggle" type="button" aria-label="প্লে/পজ">
+        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 21 12 6 21 6 3"></polygon></svg>
+        <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="3" width="5" height="18"></rect><rect x="14" y="3" width="5" height="18"></rect></svg>
+      </button>
       <div class="placeholder" id="placeholder">
         <div class="glyph">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -648,6 +688,7 @@
   const video = document.getElementById('video');
   const monitor = document.getElementById('monitor');
   const placeholder = document.getElementById('placeholder');
+  const centerToggle = document.getElementById('centerToggle');
   const lowerThird = document.getElementById('lowerThird');
   const ltNum = document.getElementById('ltNum');
   const ltName = document.getElementById('ltName');
@@ -693,14 +734,14 @@
   fullscreenBtn.addEventListener('click', () => {
     if(document.fullscreenElement){
       document.exitFullscreen();
-    } else if(monitor.requestFullscreen){
-      monitor.requestFullscreen().then(() => {
+    } else if(document.documentElement.requestFullscreen){
+      document.documentElement.requestFullscreen().then(() => {
         if(screen.orientation && screen.orientation.lock){
           screen.orientation.lock('landscape').catch(() => {
             // not supported (e.g. iOS Safari) — CSS rotate fallback handles it
           });
         }
-      });
+      }).catch(() => {});
     } else if(video.webkitEnterFullscreen){
       // iOS Safari fallback: only the <video> element supports native fullscreen
       video.webkitEnterFullscreen();
@@ -736,6 +777,19 @@
     statusEl.innerHTML = 'স্ট্যাটাস: <b>' + text + '</b>';
   }
 
+  function syncCenterToggle(){
+    const hasChannel = !!activeId;
+    centerToggle.classList.toggle('show', hasChannel && video.paused);
+    centerToggle.classList.toggle('is-playing', !video.paused);
+  }
+  video.addEventListener('play', syncCenterToggle);
+  video.addEventListener('pause', syncCenterToggle);
+  video.addEventListener('playing', syncCenterToggle);
+  centerToggle.addEventListener('click', () => {
+    if(video.paused){ video.play().catch(()=>{}); }
+    else{ video.pause(); }
+  });
+
   const stopBtn = document.getElementById('stopBtn');
   function stopChannel(){
     if(hls){ hls.destroy(); hls = null; }
@@ -746,6 +800,7 @@
     lowerThird.classList.remove('show');
     document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
     activeId = null;
+    syncCenterToggle();
     setStatus('বন্ধ');
   }
   stopBtn.addEventListener('click', stopChannel);
@@ -762,6 +817,7 @@
     ltName.textContent = ch.name || 'Unknown';
     lowerThird.classList.add('show');
     setStatus('লোড হচ্ছে…');
+    syncCenterToggle();
 
     if(hls){ hls.destroy(); hls = null; }
 
