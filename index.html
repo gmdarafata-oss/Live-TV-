@@ -278,6 +278,19 @@
     object-fit: contain;
   }
 
+  /* Force landscape display when fullscreen is opened on a portrait phone
+     (used as a fallback where screen.orientation.lock isn't supported, e.g. iOS Safari) */
+  @media (orientation: portrait){
+    .monitor:fullscreen{
+      position: fixed;
+      top: 0; left: 0;
+      transform-origin: top left;
+      transform: rotate(90deg) translateY(-100%);
+      width: 100vh;
+      height: 100vw;
+    }
+  }
+
   .channels-btn{
     position:absolute;
     left: 18px; bottom: 18px;
@@ -296,6 +309,25 @@
   .channels-btn:hover{ border-color: var(--cyan); color: var(--cyan); }
   .channels-btn.active{ border-color: var(--cyan); color: var(--cyan); }
   .channels-btn svg{ width:18px; height:18px; }
+
+  .stop-btn{
+    position:absolute;
+    right: 18px; top: 18px;
+    width: 40px; height:40px;
+    border-radius: 50%;
+    background: rgba(11,14,20,0.72);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text);
+    display:flex;
+    align-items:center; justify-content:center;
+    cursor:pointer;
+    z-index: 6;
+    transition: border-color .2s, color .2s, transform .15s;
+  }
+  .stop-btn:hover{ border-color: var(--red); color: var(--red); }
+  .stop-btn:active{ transform: scale(0.94); }
+  .stop-btn svg{ width:14px; height:14px; }
 
   .fs-drawer{
     position:absolute;
@@ -560,6 +592,11 @@
           </svg>
         </button>
       </div>
+      <button class="stop-btn" id="stopBtn" type="button" aria-label="ভিডিও বন্ধ করুন">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <rect x="5" y="5" width="14" height="14" rx="1.5"></rect>
+        </svg>
+      </button>
       <button class="channels-btn" id="channelsBtn" type="button" aria-label="চ্যানেল লিস্ট">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -657,7 +694,13 @@
     if(document.fullscreenElement){
       document.exitFullscreen();
     } else if(monitor.requestFullscreen){
-      monitor.requestFullscreen();
+      monitor.requestFullscreen().then(() => {
+        if(screen.orientation && screen.orientation.lock){
+          screen.orientation.lock('landscape').catch(() => {
+            // not supported (e.g. iOS Safari) — CSS rotate fallback handles it
+          });
+        }
+      });
     } else if(video.webkitEnterFullscreen){
       // iOS Safari fallback: only the <video> element supports native fullscreen
       video.webkitEnterFullscreen();
@@ -676,6 +719,9 @@
     if(!document.fullscreenElement){
       fsDrawer.classList.remove('open');
       channelsBtn.classList.remove('active');
+      if(screen.orientation && screen.orientation.unlock){
+        screen.orientation.unlock();
+      }
     }
   });
 
@@ -689,6 +735,20 @@
   function setStatus(text){
     statusEl.innerHTML = 'স্ট্যাটাস: <b>' + text + '</b>';
   }
+
+  const stopBtn = document.getElementById('stopBtn');
+  function stopChannel(){
+    if(hls){ hls.destroy(); hls = null; }
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
+    placeholder.style.display = 'flex';
+    lowerThird.classList.remove('show');
+    document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
+    activeId = null;
+    setStatus('বন্ধ');
+  }
+  stopBtn.addEventListener('click', stopChannel);
 
   function playChannel(ch, cardEl){
     document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
