@@ -637,6 +637,8 @@
 
   let hls = null;
   let activeId = null;
+  let lastChannel = null;
+  let isStopped = false;
   let userWantsSound = false;
 
   function syncMuteIcon(){
@@ -731,6 +733,11 @@
   }
 
   centerToggle.addEventListener('click', () => {
+    if(isStopped && lastChannel){
+      // resume the channel that was stopped, no need to reopen the channel list
+      playChannel(lastChannel);
+      return;
+    }
     if(video.paused){
       jumpToLiveEdge();
       video.play().catch(()=>{});
@@ -745,12 +752,10 @@
     video.pause();
     video.removeAttribute('src');
     video.load();
-    placeholder.style.display = 'flex';
-    lowerThird.classList.remove('show');
-    document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
-    activeId = null;
+    isStopped = true;
+    placeholder.style.display = 'none';
     syncCenterToggle();
-    setStatus('বন্ধ');
+    setStatus('বন্ধ' + (lastChannel ? ' — ' + lastChannel.name + ' (প্লে চাপলে আবার চলবে)' : ''));
   }
   stopBtn.addEventListener('click', stopChannel);
 
@@ -758,6 +763,8 @@
     document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
     document.querySelectorAll('[data-ch-id="' + ch.id + '"]').forEach(c => c.classList.add('active'));
     activeId = ch.id;
+    lastChannel = ch;
+    isStopped = false;
     fsDrawer.classList.remove('open');
     channelsBtn.classList.remove('active');
 
