@@ -269,8 +269,7 @@
   }
   body.is-fullscreen .topbar,
   body.is-fullscreen .stage-controls,
-  body.is-fullscreen .deck,
-  body.is-fullscreen .howto{
+  body.is-fullscreen .deck{
     display: none;
   }
   body.is-fullscreen .stage{ padding: 0; max-width: none; }
@@ -520,58 +519,6 @@
     color: var(--amber);
   }
 
-  /* ---------- footer / how-to ---------- */
-  .howto{
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 0 clamp(20px, 5vw, 56px) 70px;
-  }
-  .howto-card{
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: var(--surface);
-    padding: 22px clamp(18px, 3vw, 28px);
-  }
-  .howto-card h3{
-    font-family: var(--display);
-    font-size: 13px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin-bottom: 12px;
-  }
-  .howto-card ol{
-    list-style: none;
-    counter-reset: step;
-    display:flex;
-    flex-direction:column;
-    gap: 10px;
-  }
-  .howto-card li{
-    counter-increment: step;
-    display:flex;
-    gap: 12px;
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-  .howto-card li::before{
-    content: counter(step, decimal-leading-zero);
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--cyan);
-    flex-shrink:0;
-    padding-top: 1px;
-  }
-  .howto-card code{
-    font-family: var(--mono);
-    background: var(--surface-raised);
-    padding: 1px 6px;
-    border-radius: 4px;
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-
   @media (max-width: 540px){
     .lower-third{ left:10px; bottom:10px; padding:8px 12px 8px 8px; }
     .lower-third .num{ font-size:16px; }
@@ -670,18 +617,6 @@
       <span id="countLabel">0 চ্যানেল</span>
     </div>
     <div class="channel-grid" id="channelGrid"></div>
-  </section>
-
-  <section class="howto">
-    <div class="howto-card">
-      <h3>নতুন চ্যানেল যোগ করবেন যেভাবে</h3>
-      <ol>
-        <li>রিপোতে থাকা <code>channels.json</code> ফাইলটি ওপেন করুন।</li>
-        <li>একটি নতুন entry যোগ করুন — <code>id</code>, <code>number</code>, <code>name</code>, <code>logo</code> (ঐচ্ছিক) এবং <code>url</code> (m3u8 লিংক) দিন।</li>
-        <li>Commit করে GitHub এ পুশ করুন — GitHub Pages কয়েক সেকেন্ডের মধ্যে আপডেট হয়ে যাবে।</li>
-        <li>পেজ রিফ্রেশ করলেই নতুন চ্যানেলটি লিস্টে দেখা যাবে।</li>
-      </ol>
-    </div>
   </section>
 
 <script>
