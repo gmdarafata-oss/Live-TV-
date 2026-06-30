@@ -189,9 +189,66 @@
   .mute-btn:not(.is-muted) .vol-wave{ display:inline; }
   .mute-btn.is-muted .vol-wave{ display:none; }
 
+  .volume-wrap{
+    position:absolute;
+    right: 18px; bottom: 18px;
+    display:flex;
+    align-items:center;
+    gap: 0;
+  }
+  .volume-wrap .mute-btn{
+    position: static;
+    flex-shrink:0;
+  }
+  .volume-slider-pill{
+    max-width: 0;
+    overflow: hidden;
+    display:flex;
+    align-items:center;
+    background: rgba(11,14,20,0.72);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 21px;
+    height: 42px;
+    margin-right: -21px;
+    padding-right: 21px;
+    transition: max-width .25s ease, padding-left .25s ease;
+  }
+  .volume-wrap:hover .volume-slider-pill,
+  .volume-wrap:focus-within .volume-slider-pill{
+    max-width: 110px;
+    padding-left: 14px;
+  }
+  .volume-slider-pill input[type="range"]{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 90px;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+  .volume-slider-pill input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: var(--cyan);
+    cursor: pointer;
+    box-shadow: 0 0 0 3px rgba(77,216,232,0.15);
+  }
+  .volume-slider-pill input[type="range"]::-moz-range-thumb{
+    width: 13px; height: 13px;
+    border: none;
+    border-radius: 50%;
+    background: var(--cyan);
+    cursor: pointer;
+    box-shadow: 0 0 0 3px rgba(77,216,232,0.15);
+  }
+
   .fullscreen-btn{
     position:absolute;
-    right: 68px; bottom: 18px;
+    right: 18px; bottom: 68px;
     width: 42px; height:42px;
     border-radius: 50%;
     background: rgba(11,14,20,0.72);
@@ -445,14 +502,19 @@
           <div class="tag">ON AIR</div>
         </div>
       </div>
-      <button class="mute-btn" id="muteBtn" type="button" aria-label="সাউন্ড অন/অফ">
-        <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-          <path class="vol-wave" d="M15.5 8.5a5 5 0 0 1 0 7"></path>
-          <line class="x-line" x1="23" y1="9" x2="17" y2="15"></line>
-          <line class="x-line" x1="17" y1="9" x2="23" y2="15"></line>
-        </svg>
-      </button>
+      <div class="volume-wrap">
+        <div class="volume-slider-pill">
+          <input type="range" id="volumeSlider" min="0" max="100" value="100" aria-label="ভলিউম">
+        </div>
+        <button class="mute-btn" id="muteBtn" type="button" aria-label="সাউন্ড অন/অফ">
+          <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path class="vol-wave" d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+            <line class="x-line" x1="23" y1="9" x2="17" y2="15"></line>
+            <line class="x-line" x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+      </div>
       <button class="fullscreen-btn" id="fullscreenBtn" type="button" aria-label="ফুলস্ক্রিন">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <polyline points="15 3 21 3 21 9"></polyline>
@@ -514,10 +576,24 @@
   muteBtn.addEventListener('click', () => {
     video.muted = !video.muted;
     userWantsSound = !video.muted;
-    if(!video.muted){ video.play().catch(()=>{}); }
+    if(!video.muted){
+      video.play().catch(()=>{});
+      if(video.volume === 0){ video.volume = 1; }
+    }
     syncMuteIcon();
+    volumeSlider.value = Math.round(video.muted ? 0 : video.volume * 100);
   });
   syncMuteIcon();
+
+  const volumeSlider = document.getElementById('volumeSlider');
+  volumeSlider.addEventListener('input', () => {
+    const v = Number(volumeSlider.value) / 100;
+    video.volume = v;
+    video.muted = (v === 0);
+    userWantsSound = v > 0;
+    if(v > 0){ video.play().catch(()=>{}); }
+    syncMuteIcon();
+  });
 
   const fullscreenBtn = document.getElementById('fullscreenBtn');
   fullscreenBtn.addEventListener('click', () => {
