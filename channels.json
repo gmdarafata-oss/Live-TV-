@@ -1,16 +1,37 @@
 [
   {
-    "id": "Channel 1",
+    "id": "9xm",
     "number": "01",
-    "name": "Sample Channel One",
-    "logo": "https://placehold.co/120x120/1a1f2b/8a93a6?text=CH+01",
-    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8"
+    "name": "9XM",
+    "logo": "https://placehold.co/120x120/1a1f2b/8a93a6?text=9XM",
+    "url": "https://mumt01.tangotv.in/O5aw8Zn39XM/index.m3u8"
   },
   {
-    "id": "ch02",
+    "id": "and-tv-international",
     "number": "02",
-    "name": "Sample Channel Two",
-    "logo": "https://placehold.co/120x120/1a1f2b/8a93a6?text=CH+02",
+    "name": "&TV International (1080p)",
+    "logo": "https://placehold.co/120x120/1a1f2b/8a93a6?text=%26TV",
+    "url": "https://3f56f997.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U2Ftc3VuZy1nYl9BbmRUVl9ITFM/playlist.m3u8"
+  },
+  {
+    "id": "atn-news",
+    "number": "03",
+    "name": "ATN News (1080p)",
+    "logo": "https://placehold.co/120x120/1a1f2b/8a93a6?text=ATN",
     "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/1706.m3u8"
+  },
+  {
+    "id": "star-news",
+    "number": "04",
+    "name": "Star News (1080p)",
+    "logo": "https://placehold.co/120x120/1a1f2b/8a93a6?text=Star",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1710/output/index.m3u8"
+  },
+  {
+    "id": "news-24",
+    "number": "05",
+    "name": "News 24 (1080p)",
+    "logo": "https://placehold.co/120x120/1a1f2b/8a93a6?text=News24",
+    "url": "https://bozztv.com/rongo/rongo-News24HD/index.m3u8"
   }
 ]
