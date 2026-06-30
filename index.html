@@ -167,6 +167,28 @@
     animation: pulse 1.8s ease-in-out infinite;
   }
 
+  .mute-btn{
+    position:absolute;
+    right: 18px; bottom: 18px;
+    width: 42px; height:42px;
+    border-radius: 50%;
+    background: rgba(11,14,20,0.72);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    transition: border-color .2s, color .2s, transform .15s;
+  }
+  .mute-btn:hover{ border-color: var(--cyan); color: var(--cyan); }
+  .mute-btn:active{ transform: scale(0.94); }
+  .mute-btn svg{ width:18px; height:18px; }
+  .mute-btn.is-muted{ color: var(--amber); }
+  .mute-btn .x-line{ display:none; }
+  .mute-btn.is-muted .x-line{ display:inline; }
+  .mute-btn:not(.is-muted) .vol-wave{ display:inline; }
+  .mute-btn.is-muted .vol-wave{ display:none; }
+
   .stage-controls{
     display:flex; align-items:center; justify-content:space-between;
     gap: 12px;
@@ -388,6 +410,14 @@
           <div class="tag">ON AIR</div>
         </div>
       </div>
+      <button class="mute-btn" id="muteBtn" type="button" aria-label="সাউন্ড অন/অফ">
+        <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path class="vol-wave" d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+          <line class="x-line" x1="23" y1="9" x2="17" y2="15"></line>
+          <line class="x-line" x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      </button>
     </div>
 
     <div class="stage-controls">
@@ -428,9 +458,23 @@
   const statusEl = document.getElementById('status');
   const reloadBtn = document.getElementById('reloadBtn');
   const clockEl = document.getElementById('clock');
+  const muteBtn = document.getElementById('muteBtn');
 
   let hls = null;
   let activeId = null;
+  let userWantsSound = false;
+
+  function syncMuteIcon(){
+    muteBtn.classList.toggle('is-muted', video.muted);
+  }
+
+  muteBtn.addEventListener('click', () => {
+    video.muted = !video.muted;
+    userWantsSound = !video.muted;
+    if(!video.muted){ video.play().catch(()=>{}); }
+    syncMuteIcon();
+  });
+  syncMuteIcon();
 
   function tickClock(){
     const d = new Date();
