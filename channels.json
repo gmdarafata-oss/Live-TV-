@@ -1,10 +1,10 @@
 [
   {
-    "id": "T-Sport",
+    "id": "9xm",
     "number": "01",
-    "name": "TSP",
+    "name": "9XM",
     "logo": "https://placehold.co/120x120/1a1f2b/8a93a6?text=9XM",
-    "url": "http://172.19.17.4:8090/hls/tsportshd.m3u8"
+    "url": "https://mumt01.tangotv.in/O5aw8Zn39XM/index.m3u8"
   },
   {
     "id": "and-tv-international",
@@ -33,5 +33,278 @@
     "name": "News 24 (1080p)",
     "logo": "https://placehold.co/120x120/1a1f2b/8a93a6?text=News24",
     "url": "https://bozztv.com/rongo/rongo-News24HD/index.m3u8"
+  },
+  {
+    "id": "ananda-tv",
+    "number": "06",
+    "name": "Ananda TV",
+    "logo": "https://i.imgur.com/jkbo7Qe.png",
+    "url": "https://bozztv.com/rongo/rongo-AnandaTV/index.m3u8"
+  },
+  {
+    "id": "asian-tv",
+    "number": "07",
+    "name": "Asian TV",
+    "logo": "https://i.imgur.com/k2adSjA.png",
+    "url": "https://tvsen6.aynaott.com/asiantv/index.m3u8"
+  },
+  {
+    "id": "atn-bangla",
+    "number": "08",
+    "name": "ATN Bangla",
+    "logo": "https://i.imgur.com/K1HmMRz.png",
+    "url": "https://tvsen5.aynaott.com/atnbangla/index.m3u8"
+  },
+  {
+    "id": "atn-music",
+    "number": "09",
+    "name": "ATN Music",
+    "logo": "https://www.jagobd.com/wp-content/uploads/2015/12/atnmusic.jpg?x50681",
+    "url": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI/atnmusic.stream/playlist.m3u8"
+  },
+  {
+    "id": "bangla-tv",
+    "number": "10",
+    "name": "Bangla TV",
+    "logo": "https://i.imgur.com/DLGjTfI.png",
+    "url": "https://tvsen6.aynaott.com/banglatv/index.m3u8"
+  },
+  {
+    "id": "bangla-vision",
+    "number": "11",
+    "name": "Bangla Vision",
+    "logo": "https://i.imgur.com/nCWgp38.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1715/output/index.m3u8"
+  },
+  {
+    "id": "bijoy-tv",
+    "number": "12",
+    "name": "Bijoy TV",
+    "logo": "https://i.imgur.com/Faetm0C.png",
+    "url": "https://tvsen6.aynaott.com/bijoytv/index.m3u8"
+  },
+  {
+    "id": "boishakhi-tv",
+    "number": "13",
+    "name": "Boishakhi TV",
+    "logo": "https://i.imgur.com/gxL05Y4.png",
+    "url": "https://tvsen6.aynaott.com/boishakhitv/index.m3u8"
+  },
+  {
+    "id": "btv-chattogram",
+    "number": "14",
+    "name": "BTV Chattogram",
+    "logo": "https://i.imgur.com/hvpyuek.png",
+    "url": "https://bozztv.com/rongo/rongo-BTVChattagram/index.m3u8"
+  },
+  {
+    "id": "btv-national",
+    "number": "15",
+    "name": "BTV National",
+    "logo": "https://i.imgur.com/5OE2FDt.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/1709.m3u8"
+  },
+  {
+    "id": "btv-news",
+    "number": "16",
+    "name": "BTV News",
+    "logo": "https://www.btvlive.gov.bd/_next/image?url=https%3A%2F%2Fd38ll44lbmt52p.cloudfront.net%2Fcms%2Fchannel_poster%2F1735648543857_Poster.jpg&w=3840&q=75",
+    "url": "https://tvsen6.aynaott.com/BTVNews/index.m3u8"
+  },
+  {
+    "id": "btv-world",
+    "number": "17",
+    "name": "BTV World",
+    "logo": "https://i.imgur.com/sSnrg7o.png",
+    "url": "https://www.btvlive.gov.bd/streams/ef8b8bbc-98b7-4ba7-a49d-a0adaf259d35/ES/d96eb7f4-83c2-4472-9597-3568390a8ebf/d96eb7f4-83c2-4472-9597-3568390a8ebf_3_playlist.m3u8"
+  },
+  {
+    "id": "channel-9",
+    "number": "18",
+    "name": "Channel 9",
+    "logo": "https://i.imgur.com/Xf5YuoE.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1729/output/index.m3u8"
+  },
+  {
+    "id": "channel-24",
+    "number": "19",
+    "name": "Channel 24",
+    "logo": "https://i.imgur.com/4JLkaF7.png",
+    "url": "https://bozztv.com/rongo/rongo-Channel24HD/index.m3u8"
+  },
+  {
+    "id": "channel-i",
+    "number": "20",
+    "name": "Channel I",
+    "logo": "https://i.imgur.com/X0JJlOX.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/index.m3u8"
+  },
+  {
+    "id": "dbc-news",
+    "number": "21",
+    "name": "DBC News",
+    "logo": "https://i.imgur.com/Qbt6q4z.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1728/output/index.m3u8"
+  },
+  {
+    "id": "deepto-tv",
+    "number": "22",
+    "name": "Deepto TV",
+    "logo": "https://i.imgur.com/F62GUqS.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1711/output/index.m3u8"
+  },
+  {
+    "id": "desh-tv",
+    "number": "23",
+    "name": "Desh TV",
+    "logo": "https://i.imgur.com/ItrZok1.png",
+    "url": "https://bozztv.com/rongo/rongo-DeshTV/index.m3u8"
+  },
+  {
+    "id": "duronto-tv",
+    "number": "24",
+    "name": "Duronto TV",
+    "logo": "https://i.imgur.com/gXsddRK.png",
+    "url": "https://trs1.aynaott.com/duronto/index.m3u8"
+  },
+  {
+    "id": "ekattor-tv",
+    "number": "25",
+    "name": "Ekattor TV",
+    "logo": "https://i.imgur.com/zoLwwUK.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/1705.m3u8"
+  },
+  {
+    "id": "ekhon-tv",
+    "number": "26",
+    "name": "Ekhon TV",
+    "logo": "https://i.imgur.com/tRrDh6z.png",
+    "url": "https://tplay.live/out/bangladesh/ekhontv.index.m3u8"
+  },
+  {
+    "id": "ekushey-tv",
+    "number": "27",
+    "name": "Ekushey TV",
+    "logo": "https://i.imgur.com/lRpkGHj.png",
+    "url": "https://tvsen6.aynaott.com/etv/index.m3u8"
+  },
+  {
+    "id": "gazi-tv",
+    "number": "28",
+    "name": "Gazi TV",
+    "logo": "https://i.imgur.com/2Lzhiq6.png",
+    "url": "http://tvn1.chowdhury-shaheb.com/gazitv/index.m3u8"
+  },
+  {
+    "id": "global-tv",
+    "number": "29",
+    "name": "Global TV",
+    "logo": "https://i.imgur.com/oe0pq1R.png",
+    "url": "https://tvsen6.aynaott.com/globaltvhd/index.m3u8"
+  },
+  {
+    "id": "green-tv",
+    "number": "30",
+    "name": "Green TV",
+    "logo": "https://www.jagobd.com/wp-content/uploads/2022/12/green-tv.jpg",
+    "url": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/greentv.stream/live-orgin/greentv.stream/playlist.m3u8"
+  },
+  {
+    "id": "independent-tv",
+    "number": "31",
+    "name": "Independent TV",
+    "logo": "https://i.imgur.com/POXFhGN.png",
+    "url": "https://bozztv.com/rongo/rongo-IndependentTV/index.m3u8"
+  },
+  {
+    "id": "jamuna-tv",
+    "number": "32",
+    "name": "Jamuna TV",
+    "logo": "https://www.jamuna.tv/wp-content/themes/jtv-news/img/logo.png",
+    "url": "https://bozztv.com/rongo/rongo-JamunaTelevision/index.m3u8"
+  },
+  {
+    "id": "maasranga-tv",
+    "number": "33",
+    "name": "Maasranga TV",
+    "logo": "https://i.imgur.com/uVZJMed.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1722/output/index.m3u8"
+  },
+  {
+    "id": "madani-channel-bangla",
+    "number": "34",
+    "name": "Madani Channel Bangla",
+    "logo": "https://i.imgur.com/vIJTVia.png",
+    "url": "https://streaming.madanichannel.tv/static/streaming-playlists/hls/d3e49b76-ac06-4689-a641-9200445b647f/master.m3u8"
+  },
+  {
+    "id": "mohona-tv",
+    "number": "35",
+    "name": "Mohona TV",
+    "logo": "https://i.imgur.com/E6doEWH.png",
+    "url": "https://bozztv.com/rongo/rongo-MohonaTV/index.m3u8"
+  },
+  {
+    "id": "movie-bangla",
+    "number": "36",
+    "name": "Movie Bangla",
+    "logo": "https://www.jagobd.com/wp-content/uploads/2016/02/moviebangla.jpg?x50681",
+    "url": "http://alvetv.com/moviebanglatv/8080/index.m3u8"
+  },
+  {
+    "id": "my-tv",
+    "number": "37",
+    "name": "My TV",
+    "logo": "https://i.imgur.com/475qK5T.png",
+    "url": "https://tvsen6.aynaott.com/mytv/index.m3u8"
+  },
+  {
+    "id": "ntv",
+    "number": "38",
+    "name": "NTV",
+    "logo": "https://i.imgur.com/l75bDTx.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1716/output/index.m3u8"
+  },
+  {
+    "id": "rtv",
+    "number": "39",
+    "name": "RTV",
+    "logo": "https://i.imgur.com/yu8ugqt.png",
+    "url": "https://bozztv.com/rongo/rongo-RTV/index.m3u8"
+  },
+  {
+    "id": "sa-tv",
+    "number": "40",
+    "name": "SA TV",
+    "logo": "https://i.imgur.com/tL9kxxB.png",
+    "url": "https://tvsen6.aynaott.com/satv/index.m3u8"
+  },
+  {
+    "id": "sangsad-tv",
+    "number": "41",
+    "name": "Sangsad TV",
+    "logo": "https://i.imgur.com/jkouxLg.png",
+    "url": "https://bozztv.com/rongo/rongo-SangsadTV/index.m3u8"
+  },
+  {
+    "id": "somoy-news-tv",
+    "number": "42",
+    "name": "Somoy News TV",
+    "logo": "https://i.imgur.com/i54AQic.png",
+    "url": "https://bozztv.com/rongo/rongo-somoy/index.m3u8"
+  },
+  {
+    "id": "t-sports",
+    "number": "43",
+    "name": "T Sports",
+    "logo": "https://i.imgur.com/2JzlorD.png",
+    "url": "https://trs1.aynaott.com/tsports/index.m3u8"
+  },
+  {
+    "id": "vokta-tv",
+    "number": "44",
+    "name": "Vokta TV",
+    "logo": "https://i.imgur.com/szAGBCU.png",
+    "url": "https://vokta.raytahost.com/live/voktatv/index.m3u8"
   }
 ]
